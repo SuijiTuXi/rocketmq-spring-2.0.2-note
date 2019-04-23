@@ -47,6 +47,7 @@ import java.util.concurrent.ExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// CODE_MARK [code] 封装 producer 的操作
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class RocketMQTemplate extends AbstractMessageSendingTemplate<String> implements InitializingBean, DisposableBean {
     private static final  Logger log = LoggerFactory.getLogger(RocketMQTemplate.class);
@@ -123,6 +124,7 @@ public class RocketMQTemplate extends AbstractMessageSendingTemplate<String> imp
         return syncSend(destination, message, timeout, 0);
     }
 
+    // CODE_MARK [code] 发送 org.springframework.messaging.Message
     /**
      * Same to {@link #syncSend(String, Message)} with send timeout specified in addition.
      *
@@ -166,6 +168,7 @@ public class RocketMQTemplate extends AbstractMessageSendingTemplate<String> imp
         return syncSend(destination, payload, producer.getSendMsgTimeout());
     }
 
+    // CODE_MARK [code] 发送对象，通过 doConvert 将对象转换成 Message
     /**
      * Same to {@link #syncSend(String, Object)} with send timeout specified in addition.
      *
@@ -191,6 +194,7 @@ public class RocketMQTemplate extends AbstractMessageSendingTemplate<String> imp
         return syncSendOrderly(destination, message, hashKey, producer.getSendMsgTimeout());
     }
 
+    // CODE_MARK [code] 发顺序消息
     /**
      * Same to {@link #syncSendOrderly(String, Message, String)} with send timeout specified in addition.
      *
@@ -246,6 +250,7 @@ public class RocketMQTemplate extends AbstractMessageSendingTemplate<String> imp
         return syncSendOrderly(destination, message, hashKey, producer.getSendMsgTimeout());
     }
 
+    // CODE_MARK [code] 异步发送
     /**
      * Same to {@link #asyncSend(String, Message, SendCallback)} with send timeout specified in addition.
      *
@@ -378,6 +383,7 @@ public class RocketMQTemplate extends AbstractMessageSendingTemplate<String> imp
         asyncSendOrderly(destination, message, hashKey, sendCallback, timeout);
     }
 
+    // CODE_MARK [code] 单向发送
     /**
      * Similar to <a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a>, this method won't wait for
      * acknowledgement from broker before return. Obviously, it has maximums throughput yet potentials of message loss.
@@ -520,6 +526,7 @@ public class RocketMQTemplate extends AbstractMessageSendingTemplate<String> imp
         return cachedProducer;
     }
 
+    // CODE_MARK [code] 发送事务消息
     /**
      * Send Spring Message in Transaction
      *

@@ -26,6 +26,9 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnMissingBean(ObjectMapper.class)
 class JacksonFallbackConfiguration {
 
+    /**
+     * CODE_MARK [Bean Definition] 定义 JSON 和 Java Bean 转换的 ObjectMapper
+     */
     @Bean
     public ObjectMapper rocketMQMessageObjectMapper() {
         return new ObjectMapper();

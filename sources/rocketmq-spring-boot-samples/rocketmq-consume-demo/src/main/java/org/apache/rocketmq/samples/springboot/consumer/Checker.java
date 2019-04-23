@@ -32,12 +32,10 @@ import org.apache.rocketmq.common.message.MessageExt;
 
 //@RocketMQTransactionListener
 public class Checker implements TransactionListener {
-    @Override
     public LocalTransactionState executeLocalTransaction(Message message, Object o) {
         return null;
     }
 
-    @Override
     public LocalTransactionState checkLocalTransaction(MessageExt messageExt) {
         return null;
     }

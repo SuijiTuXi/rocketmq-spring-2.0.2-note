@@ -49,6 +49,9 @@ import org.springframework.util.StringUtils;
 @AutoConfigureAfter(JacksonAutoConfiguration.class)
 public class RocketMQAutoConfiguration {
 
+    /**
+     * CODE_MARK [Bean Definition] 如果没定义 DefaultMQProducer 并且定义了 name-server 和 producer.group 属性，就定义一个 DefaultMQProducer
+     */
     @Bean
     @ConditionalOnMissingBean(DefaultMQProducer.class)
     @ConditionalOnProperty(prefix = "rocketmq", value = {"name-server", "producer.group"})
@@ -60,6 +63,8 @@ public class RocketMQAutoConfiguration {
         Assert.hasText(groupName, "[rocketmq.producer.group] must not be null");
 
         DefaultMQProducer producer;
+
+        // CODE_MARK [Bean Definition] ACL
         String ak = rocketMQProperties.getProducer().getAccessKey();
         String sk = rocketMQProperties.getProducer().getSecretKey();
         if (!StringUtils.isEmpty(ak) && !StringUtils.isEmpty(sk)) {
@@ -83,6 +88,9 @@ public class RocketMQAutoConfiguration {
         return producer;
     }
 
+    /**
+     * CODE_MARK [Bean Definition] 有 DefaultMQProducer Bean 就定义 RocketMQTemplate
+     */
     @Bean(destroyMethod = "destroy")
     @ConditionalOnBean(DefaultMQProducer.class)
     @ConditionalOnMissingBean(RocketMQTemplate.class)
@@ -93,6 +101,9 @@ public class RocketMQAutoConfiguration {
         return rocketMQTemplate;
     }
 
+    /**
+     * CODE_MARK [Bean Definition] 有 RocketMQTemplate Bean 就定义 TransactionHandlerRegistry
+     */
     @Bean
     @ConditionalOnBean(RocketMQTemplate.class)
     @ConditionalOnMissingBean(TransactionHandlerRegistry.class)
@@ -100,6 +111,9 @@ public class RocketMQAutoConfiguration {
         return new TransactionHandlerRegistry(template);
     }
 
+    /**
+     * CODE_MARK [Bean Definition] 定义一个处理注解的 processor
+     */
     @Bean(name = RocketMQConfigUtils.ROCKETMQ_TRANSACTION_ANNOTATION_PROCESSOR_BEAN_NAME)
     @ConditionalOnBean(TransactionHandlerRegistry.class)
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)

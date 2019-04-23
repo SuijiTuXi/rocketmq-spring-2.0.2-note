@@ -70,6 +70,8 @@ public class ListenerContainerConfiguration implements ApplicationContextAware, 
 
     @Override
     public void afterSingletonsInstantiated() {
+
+        // CODE_MARK [listener] 找到所有 @RocketMQMessageListener 的 bean
         Map<String, Object> beans = this.applicationContext.getBeansWithAnnotation(RocketMQMessageListener.class);
 
         if (Objects.nonNull(beans)) {
@@ -77,9 +79,11 @@ public class ListenerContainerConfiguration implements ApplicationContextAware, 
         }
     }
 
+    // CODE_MARK [listener] 注册 Listener
     private void registerContainer(String beanName, Object bean) {
         Class<?> clazz = AopProxyUtils.ultimateTargetClass(bean);
 
+        // CODE_MARK [listener] 判断是不是 RocketMQListener 类型
         if (!RocketMQListener.class.isAssignableFrom(bean.getClass())) {
             throw new IllegalStateException(clazz + " is not instance of " + RocketMQListener.class.getName());
         }
@@ -91,10 +95,14 @@ public class ListenerContainerConfiguration implements ApplicationContextAware, 
             counter.incrementAndGet());
         GenericApplicationContext genericApplicationContext = (GenericApplicationContext) applicationContext;
 
+        // CODE_MARK [listener] 在 context 里注册 container
         genericApplicationContext.registerBean(containerBeanName, DefaultRocketMQListenerContainer.class,
             () -> createRocketMQListenerContainer(bean, annotation));
+
         DefaultRocketMQListenerContainer container = genericApplicationContext.getBean(containerBeanName,
             DefaultRocketMQListenerContainer.class);
+
+        // CODE_MARK [listener] 启动 container， 其实就是启动 consumer
         if (!container.isRunning()) {
             try {
                 container.start();

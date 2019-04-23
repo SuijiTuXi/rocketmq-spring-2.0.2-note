@@ -17,6 +17,7 @@
 
 package org.apache.rocketmq.spring.core;
 
+// CODE_MARK [core]
 public interface RocketMQListener<T> {
     void onMessage(T message);
 }

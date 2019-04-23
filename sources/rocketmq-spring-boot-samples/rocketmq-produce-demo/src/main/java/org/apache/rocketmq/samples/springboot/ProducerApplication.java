@@ -43,9 +43,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @SpringBootApplication
 public class ProducerApplication implements CommandLineRunner {
+
     private static final String TX_PGROUP_NAME = "myTxProducerGroup";
+
     @Resource
     private RocketMQTemplate rocketMQTemplate;
+
     @Value("${demo.rocketmq.transTopic}")
     private String springTransTopic;
     @Value("${demo.rocketmq.topic}")
@@ -59,7 +62,6 @@ public class ProducerApplication implements CommandLineRunner {
         SpringApplication.run(ProducerApplication.class, args);
     }
 
-    @Override
     public void run(String... args) throws Exception {
         // Send string
         SendResult sendResult = rocketMQTemplate.syncSend(springTopic, "Hello, World!");
@@ -69,7 +71,7 @@ public class ProducerApplication implements CommandLineRunner {
         sendResult = rocketMQTemplate.syncSend(springTopic, MessageBuilder.withPayload("Hello, World! I'm from spring message").build());
         System.out.printf("syncSend2 to topic %s sendResult=%s %n", springTopic, sendResult);
 
-        // Send user-defined object
+        // 发自定义对象
         rocketMQTemplate.asyncSend(orderPaidTopic, new OrderPaidEvent("T_001", new BigDecimal("88.00")), new SendCallback() {
             public void onSuccess(SendResult var1) {
                 System.out.printf("async onSucess SendResult=%s %n", var1);
@@ -87,7 +89,7 @@ public class ProducerApplication implements CommandLineRunner {
         rocketMQTemplate.convertAndSend(msgExtTopic + ":tag1", "I'm from tag1");
         System.out.printf("syncSend topic %s tag %s %n", msgExtTopic, "tag1");
 
-        // Send transactional messages
+        // 发事务消息
         testTransaction();
     }
 
@@ -96,7 +98,6 @@ public class ProducerApplication implements CommandLineRunner {
         String[] tags = new String[]{"TagA", "TagB", "TagC", "TagD", "TagE"};
         for (int i = 0; i < 10; i++) {
             try {
-
                 Message msg = MessageBuilder.withPayload("Hello RocketMQ " + i).
                     setHeader(RocketMQHeaders.KEYS, "KEY_" + i).build();
                 SendResult sendResult = rocketMQTemplate.sendMessageInTransaction(TX_PGROUP_NAME,
@@ -117,7 +118,6 @@ public class ProducerApplication implements CommandLineRunner {
 
         private ConcurrentHashMap<String, Integer> localTrans = new ConcurrentHashMap<String, Integer>();
 
-        @Override
         public RocketMQLocalTransactionState executeLocalTransaction(Message msg, Object arg) {
             String transId = (String)msg.getHeaders().get(RocketMQHeaders.TRANSACTION_ID);
             System.out.printf("#### executeLocalTransaction is executed, msgTransactionId=%s %n",
@@ -143,7 +143,6 @@ public class ProducerApplication implements CommandLineRunner {
             return RocketMQLocalTransactionState.UNKNOWN;
         }
 
-        @Override
         public RocketMQLocalTransactionState checkLocalTransaction(Message msg) {
             String transId = (String)msg.getHeaders().get(RocketMQHeaders.TRANSACTION_ID);
             RocketMQLocalTransactionState retState = RocketMQLocalTransactionState.COMMIT;

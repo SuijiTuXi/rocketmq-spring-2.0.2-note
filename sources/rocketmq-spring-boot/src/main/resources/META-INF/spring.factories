@@ -1,2 +1,4 @@
+# CORD_MARK auto_configuration ’‚¿Ô EnableAutoConfiguration
+
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.apache.rocketmq.spring.autoconfigure.RocketMQAutoConfiguration

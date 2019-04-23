@@ -20,6 +20,10 @@ package org.apache.rocketmq.spring.autoconfigure;
 import org.apache.rocketmq.common.MixAll;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * CODE_MARK [Configuration] Rocketmq 属性配置
+ */
+
 @SuppressWarnings("WeakerAccess")
 @ConfigurationProperties(prefix = "rocketmq")
 public class RocketMQProperties {
@@ -29,6 +33,9 @@ public class RocketMQProperties {
      */
     private String nameServer;
 
+    /**
+     * CODE_MARK [Configuration] producer 的配置
+     */
     private Producer producer;
 
     public String getNameServer() {

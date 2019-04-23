@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RocketMQMessageListener(topic = "${demo.rocketmq.topic}", consumerGroup = "string_consumer")
 public class StringConsumer implements RocketMQListener<String> {
-    @Override
     public void onMessage(String message) {
         System.out.printf("------- StringConsumer received: %s \n", message);
     }
