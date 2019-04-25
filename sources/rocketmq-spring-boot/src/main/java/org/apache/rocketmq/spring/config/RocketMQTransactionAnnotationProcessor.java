@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// CODE_MARK [transaction] 扫描 RocketMQTransactionListener
 public class RocketMQTransactionAnnotationProcessor
     implements BeanPostProcessor, Ordered, ApplicationContextAware {
     private final static Logger log = LoggerFactory.getLogger(RocketMQTransactionAnnotationProcessor.class);
@@ -94,11 +95,15 @@ public class RocketMQTransactionAnnotationProcessor
                 "the class must implement interface RocketMQLocalTransactionListener",
                 null);
         }
+
+        // CODE_MARK [transaction] 将 listener 放到 TransactionHandler
         TransactionHandler transactionHandler = new TransactionHandler();
         transactionHandler.setBeanFactory(this.applicationContext.getAutowireCapableBeanFactory());
         transactionHandler.setName(listener.txProducerGroup());
         transactionHandler.setBeanName(bean.getClass().getName());
         transactionHandler.setListener((RocketMQLocalTransactionListener) bean);
+
+        // CODE_MARK [transaction] 这里创建一个 executor
         transactionHandler.setCheckExecutor(listener.corePoolSize(), listener.maximumPoolSize(),
                 listener.keepAliveTime(), listener.blockingQueueSize());
 

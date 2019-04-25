@@ -38,6 +38,7 @@ public class TransactionHandlerRegistry implements DisposableBean {
         listenerContainers.clear();
     }
 
+    // CODE_MARK [transaction] 将 handler 注册到 rocketMQTemplate， TransactionHandlerRegistry 在 configuration 中有定义
     public void registerTransactionHandler(TransactionHandler handler) throws MQClientException {
         if (listenerContainers.contains(handler.getName())) {
             throw new MQClientException(-1,

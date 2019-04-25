@@ -112,6 +112,7 @@ public class ListenerContainerConfiguration implements ApplicationContextAware, 
             }
         }
 
+        // CODE_MARK [log] 注册了哪些 listener 可以看这个日志
         log.info("Register the listener to container, listenerBeanName:{}, containerBeanName:{}", beanName, containerBeanName);
     }
 

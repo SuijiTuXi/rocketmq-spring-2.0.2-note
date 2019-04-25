@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.annotation.Resource;
 
 @SpringBootApplication
-public class ProducerApp implements CommandLineRunner {
+public class ProducerApp  {
 
     private static final String TOPIC = "ROCKETMQ_SPRING_TEST";
 
@@ -22,7 +22,12 @@ public class ProducerApp implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
         for (int i = 0 ; i < 10 ; ++i) {
-            SendResult sendResult = rocketMQTemplate.syncSend(TOPIC, "Hello, World!");
+
+            UserDto user = new UserDto();
+            user.setName("Jim" + i);
+            user.setAge(i);
+
+            SendResult sendResult = rocketMQTemplate.syncSend(TOPIC, user);
             System.out.println("发送消息成功" + sendResult.getMsgId());
         }
 

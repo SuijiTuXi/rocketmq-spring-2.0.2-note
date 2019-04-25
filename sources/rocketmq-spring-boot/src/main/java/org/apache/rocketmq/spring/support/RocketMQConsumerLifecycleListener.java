@@ -17,6 +17,7 @@
 
 package org.apache.rocketmq.spring.support;
 
+// CODE_MARK [code] 可能以后会扩展
 public interface RocketMQConsumerLifecycleListener<T> {
     void prepareStart(final T consumer);
 }

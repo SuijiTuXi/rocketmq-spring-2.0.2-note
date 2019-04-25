@@ -17,7 +17,7 @@
 
 package org.apache.rocketmq.spring.core;
 
-// CODE_MARK [core]
+// CODE_MARK [core] 支持泛型只不过是将 byte array 转为对象，其他的还是依照 rocketmq 规则
 public interface RocketMQListener<T> {
     void onMessage(T message);
 }
